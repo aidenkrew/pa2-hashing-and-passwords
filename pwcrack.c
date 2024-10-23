@@ -25,11 +25,11 @@ uint8_t hex_to_byte(unsigned char h1, unsigned char h2){
 }
 
 void hexstr_to_hash(char hexstr[], unsigned char hash[32]){
-int j = 0;
-for (int i = 0; i < 64; i++){
-hash[i] = hex_to_byte( hexstr[j], hexstr[j+1]);
-j+=2;
-}
+   int j = 0;
+    for (int i = 0; i < 64; i++){
+    hash[i] = hex_to_byte( hexstr[j], hexstr[j+1]);
+    j+=2;
+    }
 }
 
 
@@ -97,17 +97,19 @@ return 1;
 
 
 
-int main(){
-
-char password[] = "paSSword";
-char hash_as_hexstr[] = "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"; // SHA256 hash of "password"
+int main(int argc, char *argv[]){
+char password[] = "";
+char hash_as_hexstr[32];
+strcpy (hash_as_hexstr, argv[1]);// SHA256 hash of "password"
+fgets(password, 32, stdin);
 unsigned char given_hash[32];
 hexstr_to_hash(hash_as_hexstr, given_hash);
 int8_t match = crack_password(password, given_hash);
 
-printf("%d\n ",match);
-puts(password);
-
+if(match == 1)
+	printf("Found password: SHA256(%s) = %s", password, hash_as_hexstr);
+else
+	printf("Did not find a matching password");
 
 
     return 0;
