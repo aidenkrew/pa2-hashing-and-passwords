@@ -26,7 +26,9 @@ uint8_t hex_to_byte(unsigned char h1, unsigned char h2){
 
 void hexstr_to_hash(char hexstr[], unsigned char hash[32]){
    int j = 0;
-    for (int i = 0; i < 64; i++){
+    for (int i = 0; i < 32; i++)
+    {
+	    
     hash[i] = hex_to_byte( hexstr[j], hexstr[j+1]);
     j+=2;
     }
@@ -60,7 +62,12 @@ int8_t crack_password(char password[], unsigned char given_hash[]){
             if(test[i] >= 'a' && test[i] <= 'z'){
                 test[i] = test[i] - 32;
                 j = 1;
-            }
+	   }
+           /* else if(test[i] >= 'A' && test[i] <= 'Z'){
+		j = 1:
+		test[i] += 32;
+	   } */
+
             if(check_password(test, given_hash) == 1){
                 password[i] = password[i] - 32;
                 return 1;
@@ -98,19 +105,46 @@ return 1;
 
 
 int main(int argc, char *argv[]){
-char password[] = "";
-char hash_as_hexstr[32];
+/*char password[33];
+char hash_as_hexstr[65];
 strcpy (hash_as_hexstr, argv[1]);// SHA256 hash of "password"
 fgets(password, 32, stdin);
-unsigned char given_hash[32];
+
+unsigned char given_hash[33];
+
 hexstr_to_hash(hash_as_hexstr, given_hash);
+printf("hashashexstr: %s\n", given_hash);
+
 int8_t match = crack_password(password, given_hash);
+puts(password);
 
 if(match == 1)
-	printf("Found password: SHA256(%s) = %s", password, hash_as_hexstr);
+	printf("Found password: SHA256(%s) = %s\n", password, hash_as_hexstr);
 else
-	printf("Did not find a matching password");
+	printf("Did not find a matching password\n");
+*/
 
 
+//strcpy (hash_as_hexstr, argv[1]);
+
+char hash_as_hexstr[64]; // SHA256 hash for "password"
+
+strcpy (hash_as_hexstr, argv[1]);
+unsigned char given_hash[32];
+hexstr_to_hash(hash_as_hexstr, given_hash);
+
+printf("%d \n",check_password("password", given_hash));
+char password[33];
+
+scanf("%s",password);
+int8_t match = crack_password(password, given_hash);
+
+
+if(match == 1)
+
+	printf("Found password: SHA256(%s) = %s\n", password, hash_as_hexstr);
+else
+	printf("Did not find a matching password\n");
     return 0;
+
 }
