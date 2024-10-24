@@ -59,43 +59,34 @@ int8_t crack_password(char password[], unsigned char given_hash[]){
         strcpy(test, password);
         for (int i = 0; i < strlen(password); i++){
             j=0;
-            if(test[i] >= 'a' && test[i] <= 'z'){
+            if(test[i] >= 'a' && test[i] <= 'z'){ //uppercase test password
                 test[i] = test[i] - 32;
                 j = 1;
-	   }
-           /* else if(test[i] >= 'A' && test[i] <= 'Z'){
-		j = 1:
-		test[i] += 32;
-	   } */
+	  }
+	    else if(test[i] >= 'A' && test[i] <= 'Z'){//lowercase test password
+		j = 2;
+		test[i] = test[i] + 32;
+	  }	
+
 
             if(check_password(test, given_hash) == 1){
-                password[i] = password[i] - 32;
+		if(j == 1)    
+                password[i] = password[i] - 32; //uppercase actual password 
+		else
+		password[i] = password[i] + 32;//lowercase actual password letter
                 return 1;
-            }else if(j == 1){
-                
+            }
+	    else if(j == 1)         //No match, return test to original password
                     test[i] = test[i] + 32;
-                
-              
-            }
+       
             
-        }
-        for (int i = 0; i < strlen(password); i++){
-            j=0;
-            if(test[i] >= 'A' && test[i] <= 'Z'){
-                j = 1;
-                test[i] = test[i] + 32;
-            }
-            if(check_password(test, given_hash) == 1){
-                password[i] = password[i] + 32;
-                return 1;
-            }
-            else if(j == 1){
-                test[i] = test[i] - 32;
-
-        }
+	    else if(j == 2)
+		    test[i] = test[i] - 32;
+            
+        	}
 
 
-    }
+ 
        return 0;
     }
 return 1;
@@ -105,27 +96,8 @@ return 1;
 
 
 int main(int argc, char *argv[]){
-/*char password[33];
-char hash_as_hexstr[65];
-strcpy (hash_as_hexstr, argv[1]);// SHA256 hash of "password"
-fgets(password, 32, stdin);
-
-unsigned char given_hash[33];
-
-hexstr_to_hash(hash_as_hexstr, given_hash);
-printf("hashashexstr: %s\n", given_hash);
-
-int8_t match = crack_password(password, given_hash);
-puts(password);
-
-if(match == 1)
-	printf("Found password: SHA256(%s) = %s\n", password, hash_as_hexstr);
-else
-	printf("Did not find a matching password\n");
-*/
 
 
-//strcpy (hash_as_hexstr, argv[1]);
 
 char hash_as_hexstr[64]; // SHA256 hash for "password"
 
@@ -133,16 +105,24 @@ strcpy (hash_as_hexstr, argv[1]);
 unsigned char given_hash[32];
 hexstr_to_hash(hash_as_hexstr, given_hash);
 
-printf("%d \n",check_password("password", given_hash));
+
 char password[33];
+char correct_password[33];
+int8_t match = 0;
 
-scanf("%s",password);
-int8_t match = crack_password(password, given_hash);
 
+while(fgets(password,sizeof(password), stdin) != NULL){
+password[strlen(password) - 1] = 0;
+if(crack_password(password, given_hash) == 1){
+match = 1;
+strcpy(correct_password, password);
+}
+
+}
 
 if(match == 1)
 
-	printf("Found password: SHA256(%s) = %s\n", password, hash_as_hexstr);
+	printf("Found password: SHA256(%s) = %s\n", correct_password, hash_as_hexstr);
 else
 	printf("Did not find a matching password\n");
     return 0;
