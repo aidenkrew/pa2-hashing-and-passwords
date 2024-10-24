@@ -106,8 +106,8 @@ unsigned char given_hash[32];
 hexstr_to_hash(hash_as_hexstr, given_hash);
 
 
-char password[129];
-char correct_password[129];
+char password[33];
+char correct_password[33];
 int8_t match = 0;
 
 
