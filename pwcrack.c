@@ -99,9 +99,10 @@ int main(int argc, char *argv[]){
 
 
 
-char hash_as_hexstr[64]; // SHA256 hash for "password"
+char hash_as_hexstr[65]; // SHA256 hash for "password"
 
 strcpy (hash_as_hexstr, argv[1]);
+hash_as_hexstr[64] = 0;	
 unsigned char given_hash[32];
 hexstr_to_hash(hash_as_hexstr, given_hash);
 
